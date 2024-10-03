@@ -15,7 +15,7 @@
         <nav class="flex justify-between items-center py-3 border-b-2 w-11/12 mx-auto">
             <div><img src="./assets/Logo.png" alt=""></div>
             <div><label class="input input-bordered flex items-center gap-2">
-                <input type="text" class="grow" placeholder="Search" />
+                <input id="Search" type="text" class="grow" placeholder="Search" />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 16 16"
@@ -39,9 +39,14 @@
         </section>
     </header>
 
-    <main class="py-10">
+    <main class="py-4 w-11/12 mx-auto">
         <section id="videos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             
+        </section>
+
+        <section class="hidden flex flex-col gap-4 justify-center items-center" id="no-content">
+            <img src="./assets/Icon.png" alt="">
+            <h2 class="mt-10 text-2xl font-bold text-center">Ooops! Sorry. There is no <br> content here</h2>
         </section>
     </main>
     

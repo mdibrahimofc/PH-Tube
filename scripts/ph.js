@@ -6,29 +6,76 @@ const loadCategory = () => {
      .catch(err => console.log(err))
 }
 
-const loadVideos = (id = '') => {
-    fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+const loadVideos = (id = 'videos') => {
+    console.log(id)
+    const URL = `https://openapi.programming-hero.com/api/phero-tube/${id}`
+    console.log(URL);
+    fetch(URL)
     .then(res => res.json())
-    .then(data => displayVideos(data.videos))
+    .then(data => {
+        console.log(data.status);
+        if(data.videos){
+            displayVideos(data.videos)
+        }else if(!data.status){
+            noContent()
+        }
+        else{
+            displayVideos(data.category)
+        }
+        
+    })
     .catch(err => console.log(err))
+}
+
+const noContent = () => {
+    document.getElementById('no-content').classList.remove('hidden');
+    document.getElementById('videos').classList.add('hidden')
 }
 
 const displayCategory = (categories) => {
     const buttonContainer = document.getElementById('button-container');
 
     categories.map(category => {
-        console.log(category.category_id);
-        const categoryId = category.category_id
-        loadVideos(categoryId)
+        const categoryId = `category/${category.category_id}`;
         const button = document.createElement('button');
-        button.classList = 'btn'
+        button.classList = 'btn';
         button.textContent = category.category;
+
+        // Define the toggle function
+        function toggle() {
+            const allButtons = document.getElementsByClassName('btn-style');
+
+            // Remove 'btn-style' class from all buttons
+            for (const btn of allButtons) {
+                btn.classList.remove('btn-style');
+            }
+
+            // Add 'btn-style' class to the clicked button
+            button.classList.add('btn-style');
+            document.getElementById('videos').classList.remove('hidden')
+            document.getElementById('no-content').classList.add('hidden');
+
+            console.log(allButtons);  // For debugging, will show which buttons have the 'btn-style'
+        }
+
+        // Add event listener to load videos when button is clicked
+        button.addEventListener('click', () => {
+            loadVideos(categoryId);
+        });
+
+        // Add event listener to toggle button style when clicked
+        button.addEventListener('click', () => {
+            toggle();
+        });
+
         buttonContainer.append(button);
-    })
-}
+    });
+};
+
 
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById('videos');
+    videoContainer.innerHTML = ''
     videos.forEach(video => {
         const duration = video.others.posted_date;
         function showPostedTime(durationInSeconds = 0) {
@@ -76,6 +123,21 @@ const displayVideos = (videos) => {
         videoContainer.append(div)
     });
 }
+
+
+// search functionality is here 
+
+
+document.getElementById('Search').addEventListener('keyup', () => {
+    document.getElementById('videos').classList.remove('hidden')
+    document.getElementById('no-content').classList.add('hidden');
+    const search = document.getElementById('Search').value;
+    const searchValue = 'videos?title=' + search
+    loadVideos(searchValue)
+})
+
+
+
 
 loadCategory()
 loadVideos()
